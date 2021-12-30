@@ -36,18 +36,20 @@ const useStyles = createUseStyles((theme) => ({
 
         // transition: "width 0.02s linear",
 
+        opacity: 0.8,
+
         "& .resize-handle": {
             position: "absolute",
             transition: "all 0.3s ease-in-out",
             borderRadius: "1000000px",
             backgroundColor: red[400],
             "&:hover": {
-                opacity: 1,
+                opacity: 0.5,
             },
         },
 
         "& .hide": {
-            opacity: 0,
+            opacity: 0.05,
         },
     },
     topHandle: {
@@ -150,12 +152,13 @@ const Resizable = ({
         if (name === "topHandle") {
             newState.height = parent.clientHeight - (e.clientY - parent.offsetTop);
             updatedParameter = "height";
+            console.log(newState);
             if (newState.height < minHeight || newState.height > maxHeight) return;
         }
 
         // // Prevent Static fluctuation
-        // if (width != newState.width && Math.abs(newState.width - width) < resizeStep) return;
-        // if (height != newState.height && Math.abs(newState.height - height) < resizeStep) return;
+        if (width != newState.width && Math.abs(newState.width - width) < resizeStep) return;
+        if (height != newState.height && Math.abs(newState.height - height) < resizeStep) return;
 
         updateLayout(
             rowId,

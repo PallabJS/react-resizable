@@ -10,11 +10,13 @@ const useStyles = createUseStyles((theme) => ({
         flexDirection: "column",
         justifyContent: "center",
         height: "100%",
+        flex: 1,
     },
     flexRow: {
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
+        flex: 1,
     },
 }));
 
@@ -26,13 +28,16 @@ const ResizableContainer = ({ renderOnResize, resizeStep = 10, gap = 5, ...props
 
     const [sizes, setSizes] = useState([]);
 
+    console.log(props);
+
     // This sorts the items into separate rows using row property
     const fillRows = () => {
         let classifiedRows = [];
         let computedSizes = [];
 
         props.children.forEach((child, key) => {
-            if (child.type.name != "Resizable") return;
+            // *** Need to check how this is done
+            // if (child.type.name != "Resizable") return;
 
             if (!classifiedRows[child.props.row]) {
                 classifiedRows[child.props.row] = [];
@@ -51,6 +56,8 @@ const ResizableContainer = ({ renderOnResize, resizeStep = 10, gap = 5, ...props
                 });
             });
         });
+
+        console.log("fillrows: ", classifiedRows, computedSizes);
 
         setRows(classifiedRows);
         setSizes(computedSizes);
@@ -82,8 +89,11 @@ const ResizableContainer = ({ renderOnResize, resizeStep = 10, gap = 5, ...props
             updatedSizes[rowId] = sizes[rowId].map((item, itemId) => {
                 if (itemId === childId) return newItemSize;
                 let newWidth = (parseInt(item.width) / previousAvailableWidth) * availableWidth;
-                if (newWidth > maxWidth || newWidth < minWidth) {
-                    updateFlag = false;
+                if (newWidth > maxWidth) {
+                    return { width: maxHeight, height: item.height };
+                }
+                if (newWidth < minWidth) {
+                    return { width: minWidth, height: item.height };
                 }
                 return {
                     width: newWidth,
@@ -106,11 +116,21 @@ const ResizableContainer = ({ renderOnResize, resizeStep = 10, gap = 5, ...props
                 let newHeight =
                     (parseInt(row[0].height) / previousAvailableHeight) * availableHeight;
 
-                if (newHeight > maxHeight || newHeight < minHeight) {
-                    updateFlag = false;
-                }
-
                 let newRow = row.map((item, itemId) => {
+                    // Prevent locking
+                    if (newHeight > maxHeight) {
+                        return {
+                            width: item.width,
+                            height: maxHeight,
+                        };
+                    }
+                    if (newHeight < minHeight) {
+                        return {
+                            width: item.width,
+                            height: minHeight,
+                        };
+                    }
+
                     if (_rowId === rowId)
                         return {
                             width: item.width,
@@ -163,9 +183,9 @@ const ResizableContainer = ({ renderOnResize, resizeStep = 10, gap = 5, ...props
                                     gap: gap,
                                     resizeStep: resizeStep,
                                     minWidth: 0.1 * window.innerWidth,
-                                    maxWidth: 0.9 * window.innerWidth,
+                                    maxWidth: 0.8 * window.innerWidth,
                                     minHeight: 0.2 * window.innerHeight,
-                                    maxHeight: 0.8 * window.innerHeight,
+                                    maxHeight: 0.6 * window.innerHeight,
                                     updateLayout: updateSizesOnChildWidthChange,
                                 });
                             })}

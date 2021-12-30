@@ -12,8 +12,8 @@ function App() {
 
     return (
         <div className={classes.root}>
-            <Task1 />
-            {/* <Experiment /> */}
+            {/* <Task1 /> */}
+            <Experiment />
         </div>
     );
 }
