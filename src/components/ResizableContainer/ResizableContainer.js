@@ -28,14 +28,15 @@ const ResizableContainer = ({ renderOnResize, resizeStep = 10, gap = 5, ...props
 
     const [sizes, setSizes] = useState([]);
 
-    console.log(props);
-
     // This sorts the items into separate rows using row property
     const fillRows = () => {
         let classifiedRows = [];
         let computedSizes = [];
 
-        props.children.forEach((child, key) => {
+        let allChild = props.children;
+        if (!Array.isArray(props.children)) allChild = [allChild];
+
+        allChild.forEach((child, key) => {
             // *** Need to check how this is done
             // if (child.type.name != "Resizable") return;
 
@@ -56,8 +57,6 @@ const ResizableContainer = ({ renderOnResize, resizeStep = 10, gap = 5, ...props
                 });
             });
         });
-
-        console.log("fillrows: ", classifiedRows, computedSizes);
 
         setRows(classifiedRows);
         setSizes(computedSizes);
@@ -89,12 +88,6 @@ const ResizableContainer = ({ renderOnResize, resizeStep = 10, gap = 5, ...props
             updatedSizes[rowId] = sizes[rowId].map((item, itemId) => {
                 if (itemId === childId) return newItemSize;
                 let newWidth = (parseInt(item.width) / previousAvailableWidth) * availableWidth;
-                if (newWidth > maxWidth) {
-                    return { width: maxHeight, height: item.height };
-                }
-                if (newWidth < minWidth) {
-                    return { width: minWidth, height: item.height };
-                }
                 return {
                     width: newWidth,
                     height: item.height,
@@ -117,20 +110,6 @@ const ResizableContainer = ({ renderOnResize, resizeStep = 10, gap = 5, ...props
                     (parseInt(row[0].height) / previousAvailableHeight) * availableHeight;
 
                 let newRow = row.map((item, itemId) => {
-                    // Prevent locking
-                    if (newHeight > maxHeight) {
-                        return {
-                            width: item.width,
-                            height: maxHeight,
-                        };
-                    }
-                    if (newHeight < minHeight) {
-                        return {
-                            width: item.width,
-                            height: minHeight,
-                        };
-                    }
-
                     if (_rowId === rowId)
                         return {
                             width: item.width,
@@ -152,7 +131,7 @@ const ResizableContainer = ({ renderOnResize, resizeStep = 10, gap = 5, ...props
 
     useEffect(() => {
         fillRows();
-    }, []);
+    }, [props.children]);
 
     useEffect(() => {
         if (renderOnResize) {
@@ -161,7 +140,7 @@ const ResizableContainer = ({ renderOnResize, resizeStep = 10, gap = 5, ...props
         return () => {
             window.removeEventListener("resize", fillRows);
         };
-    }, [renderOnResize]);
+    }, [renderOnResize, props]);
 
     return (
         <div className={classes.root} ref={container}>
@@ -170,24 +149,29 @@ const ResizableContainer = ({ renderOnResize, resizeStep = 10, gap = 5, ...props
                     return (
                         <div key={rowId} className={classes.flexRow}>
                             {row.map((child, key) => {
-                                return React.cloneElement(child, {
-                                    key: key,
-                                    rowId: rowId,
-                                    childId: key,
-                                    first: key === 0,
-                                    last: key === row.length - 1,
-                                    isFirstRow: rowId === 0,
-                                    isLastRow: rowId === rows.length - 1,
-                                    width: sizes[rowId][key].width,
-                                    height: sizes[rowId][key].height,
-                                    gap: gap,
-                                    resizeStep: resizeStep,
-                                    minWidth: 0.1 * window.innerWidth,
-                                    maxWidth: 0.8 * window.innerWidth,
-                                    minHeight: 0.2 * window.innerHeight,
-                                    maxHeight: 0.6 * window.innerHeight,
-                                    updateLayout: updateSizesOnChildWidthChange,
-                                });
+                                return React.cloneElement(
+                                    child,
+                                    {
+                                        key: key,
+                                        rowId: rowId,
+                                        childId: key,
+                                        first: key === 0,
+                                        last: key === row.length - 1,
+                                        isFirstRow: rowId === 0,
+                                        isLastRow: rowId === rows.length - 1,
+                                        width: sizes[rowId][key].width,
+                                        height: sizes[rowId][key].height,
+                                        gap: gap,
+                                        resizeStep: resizeStep,
+                                        minWidth: 0.1 * window.innerWidth,
+                                        maxWidth: 0.8 * window.innerWidth,
+                                        minHeight: 0.2 * window.innerHeight,
+                                        maxHeight: 0.7 * window.innerHeight,
+                                        updateLayout: updateSizesOnChildWidthChange,
+                                        reRender: fillRows,
+                                    },
+                                    child.props.children
+                                );
                             })}
                         </div>
                     );

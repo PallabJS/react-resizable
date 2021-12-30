@@ -102,6 +102,7 @@ const Resizable = ({
     maxWidth,
     minHeight,
     maxHeight,
+    reRender,
 }) => {
     const classes = useStyles({ gap });
 
@@ -152,7 +153,6 @@ const Resizable = ({
         if (name === "topHandle") {
             newState.height = parent.clientHeight - (e.clientY - parent.offsetTop);
             updatedParameter = "height";
-            console.log(newState);
             if (newState.height < minHeight || newState.height > maxHeight) return;
         }
 
@@ -171,18 +171,6 @@ const Resizable = ({
             maxHeight
         );
     };
-
-    function print(e) {
-        console.log(e);
-    }
-
-    useEffect(() => {
-        window.addEventListener("click", (e) => print);
-
-        return () => {
-            window.removeEventListener("click", (e) => print);
-        };
-    }, []);
 
     return (
         <div className={classes.root} ref={root} style={{ width: width, height: height }}>

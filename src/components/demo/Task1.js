@@ -1,17 +1,50 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ResizableContainer from "../ResizableContainer/ResizableContainer";
 import Resizable from "../ResizableContainer/Resizable";
 import FixedView from "../FixedView/FixedView";
+import DataViewer from "../DataViewer";
+
+import { dashboardApi } from "../../api/dashboardApi";
 
 const Task1 = () => {
+    const [data, setData] = useState([]);
+
+    const getDashboardData = async () => {
+        let res = await dashboardApi.getData();
+        if (res.success) setData(res.data);
+    };
+
+    const updateData = ({ title, newData }) => {
+        if (!title) {
+            getDashboardData();
+        } else {
+            let updatedData = data.map((item, id) => {
+                if (title === item.title) return newData;
+                return item;
+            });
+            setData(updatedData);
+        }
+    };
+
+    useEffect(() => {
+        getDashboardData();
+    }, []);
     return (
-        <FixedView>
-            <ResizableContainer renderOnResize={true}>
-                <Resizable row={0}></Resizable>
-                <Resizable row={0}></Resizable>
-                <Resizable row={1}></Resizable>
-            </ResizableContainer>
-        </FixedView>
+        <>
+            <FixedView>
+                <ResizableContainer renderOnResize={true}>
+                    <Resizable row={0}>
+                        <DataViewer data={data[0]} updateData={updateData} />
+                    </Resizable>
+                    <Resizable row={0}>
+                        <DataViewer data={data[1]} updateData={updateData} />
+                    </Resizable>
+                    <Resizable row={1}>
+                        <DataViewer data={data[2]} updateData={updateData} />
+                    </Resizable>
+                </ResizableContainer>
+            </FixedView>
+        </>
     );
 };
 
