@@ -100,7 +100,6 @@ const Resizable = ({
     maxWidth,
     minHeight,
     maxHeight,
-    ...props
 }) => {
     const classes = useStyles({ gap });
 
