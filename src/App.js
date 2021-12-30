@@ -1,25 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import { createUseStyles } from "react-jss";
+import Task1 from "./components/demo/Task1";
+
+import Experiment from "./components/Experiment";
+
+const useStyles = createUseStyles((theme) => ({
+    root: {},
+}));
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const classes = useStyles();
+
+    return (
+        <div className={classes.root}>
+            <Task1 />
+            {/* <Experiment /> */}
+        </div>
+    );
 }
 
 export default App;
