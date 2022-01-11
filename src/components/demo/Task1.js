@@ -41,10 +41,6 @@ const Task1 = () => {
                     <Resizable row={1}>
                         <DataViewer data={data[2]} updateData={updateData} />
                     </Resizable>
-
-                    <Resizable row={1}>
-                        <DataViewer data={data[2]} updateData={updateData} />
-                    </Resizable>
                 </ResizableContainer>
             </FixedView>
         </>
