@@ -1,1 +1,1 @@
-export const HOST = "https://iv-demo.herokuapp.com";
+export const HOST = process.env["REACT_APP_BACKEND_URL"] || "https://iv-be.herokuapp.com";

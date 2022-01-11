@@ -1,13 +1,12 @@
-import { blue, grey, lightBlue, red } from "@mui/material/colors";
-import React, { useEffect, useRef, useState } from "react";
-
-import { createUseStyles } from "react-jss";
+import { makeStyles } from "@mui/styles";
+import { blue, grey, red } from "@mui/material/colors";
+import React, { useRef, useState } from "react";
 
 const handleMargin = 5;
 
 const noImg = document.createElement("div");
 
-const useStyles = createUseStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         position: "relative",
         margin: (props) => props.gap,
@@ -154,8 +153,8 @@ const Resizable = ({
         }
 
         // // Prevent Static fluctuation
-        if (width != newState.width && Math.abs(newState.width - width) < resizeStep) return;
-        if (height != newState.height && Math.abs(newState.height - height) < resizeStep) return;
+        if (width !== newState.width && Math.abs(newState.width - width) < resizeStep) return;
+        if (height !== newState.height && Math.abs(newState.height - height) < resizeStep) return;
 
         updateLayout(
             rowId,

@@ -1,0 +1,10 @@
+node_modules
+package-lock.json
+dev.config.js
+.env
+.gitignore
+public
+dist
+build
+.vscode
+src

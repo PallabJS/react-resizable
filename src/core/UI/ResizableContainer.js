@@ -1,20 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { makeStyles } from "@mui/styles";
 
-import { createUseStyles } from "react-jss";
-
-const useStyles = createUseStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        height: `calc(100%)`,
-        // flex: 1,
+        width: "100%",
+        height: `calc(100% - 4px)`,
+        overflow: "hidden",
     },
     flexRow: {
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        // flex: 1,
     },
 }));
 
@@ -27,7 +26,7 @@ const ResizableContainer = ({ renderOnResize, resizeStep = 10, gap = 5, ...props
     const [sizes, setSizes] = useState([]);
 
     // This sorts the items into separate rows using row property
-    const fillRows = () => {
+    const fillRows = useCallback(() => {
         let classifiedRows = [];
         let computedSizes = [];
 
@@ -63,7 +62,7 @@ const ResizableContainer = ({ renderOnResize, resizeStep = 10, gap = 5, ...props
 
         setRows(classifiedRows);
         setSizes(computedSizes);
-    };
+    }, [gap, props.children]);
 
     const updateSizesOnChildWidthChange = (
         rowId,
@@ -187,7 +186,7 @@ const ResizableContainer = ({ renderOnResize, resizeStep = 10, gap = 5, ...props
 
     useEffect(() => {
         fillRows();
-    }, [props.children]);
+    }, [props.children, fillRows]);
 
     useEffect(() => {
         if (renderOnResize) {
@@ -196,49 +195,47 @@ const ResizableContainer = ({ renderOnResize, resizeStep = 10, gap = 5, ...props
         return () => {
             window.removeEventListener("resize", fillRows);
         };
-    }, [renderOnResize, props]);
+    }, [renderOnResize, props, fillRows]);
 
     return (
         <div className={classes.root} ref={container}>
             {rows.map((row, rowId) => {
-                {
-                    const maxHeightRatio = -0.15 * rows.length + 1.15;
-                    const minHeightRatio = (1 - maxHeightRatio) / (rows.length - 1);
+                const maxHeightRatio = -0.15 * rows.length + 1.15;
+                const minHeightRatio = (1 - maxHeightRatio) / (rows.length - 1);
 
-                    const maxWidthRatio = -0.15 * row.length + 1.15;
-                    const minWidthRatio = (1 - maxWidthRatio) / (row.length - 1);
+                const maxWidthRatio = -0.15 * row.length + 1.15;
+                const minWidthRatio = (1 - maxWidthRatio) / (row.length - 1);
 
-                    return (
-                        <div key={rowId} className={classes.flexRow}>
-                            {row.map((child, key) => {
-                                return React.cloneElement(
-                                    child,
-                                    {
-                                        key: key,
-                                        rowId: rowId,
-                                        childId: key,
-                                        first: key === 0,
-                                        last: key === row.length - 1,
-                                        isFirstRow: rowId === 0,
-                                        isLastRow: rowId === rows.length - 1,
-                                        width: sizes[rowId][key].width,
-                                        height: sizes[rowId][key].height,
-                                        gap: gap,
-                                        resizeStep: resizeStep,
-                                        minWidth: minWidthRatio * container.current.clientWidth,
-                                        maxWidth: maxWidthRatio * container.current.clientWidth,
-                                        minHeight: minHeightRatio * container.current.clientHeight,
-                                        maxHeight:
-                                            maxHeightRatio * (container.current.clientHeight - 40),
-                                        updateLayout: updateSizesOnChildWidthChange,
-                                        reRender: fillRows,
-                                    },
-                                    child.props.children
-                                );
-                            })}
-                        </div>
-                    );
-                }
+                return (
+                    <div key={rowId} className={classes.flexRow}>
+                        {row.map((child, key) => {
+                            return React.cloneElement(
+                                child,
+                                {
+                                    key: key,
+                                    rowId: rowId,
+                                    childId: key,
+                                    first: key === 0,
+                                    last: key === row.length - 1,
+                                    isFirstRow: rowId === 0,
+                                    isLastRow: rowId === rows.length - 1,
+                                    width: sizes[rowId][key].width,
+                                    height: sizes[rowId][key].height,
+                                    gap: gap,
+                                    resizeStep: resizeStep,
+                                    minWidth: minWidthRatio * container.current.clientWidth,
+                                    maxWidth: maxWidthRatio * container.current.clientWidth,
+                                    minHeight: minHeightRatio * container.current.clientHeight,
+                                    maxHeight:
+                                        maxHeightRatio * (container.current.clientHeight - 40),
+                                    updateLayout: updateSizesOnChildWidthChange,
+                                    reRender: fillRows,
+                                },
+                                child.props.children
+                            );
+                        })}
+                    </div>
+                );
             })}
         </div>
     );

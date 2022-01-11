@@ -32,7 +32,7 @@ const Task1 = () => {
     return (
         <>
             <FixedView>
-                <ResizableContainer renderOnResize={true}>
+                <ResizableContainer renderOnResize={true} resizeStep={30}>
                     <Resizable row={0}>
                         <DataViewer data={data[0]} updateData={updateData} />
                     </Resizable>

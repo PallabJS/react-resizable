@@ -1,21 +1,13 @@
-import { createUseStyles } from "react-jss";
-import Task1 from "./components/demo/Task1";
-
-import Experiment from "./components/Experiment";
-
-const useStyles = createUseStyles((theme) => ({
-    root: {},
-}));
+import FixedView from "./components/FixedView/FixedView";
+import TaskComponent from "./components/demo/Task1";
 
 function App() {
-    const classes = useStyles();
-
     return (
-        <div className={classes.root}>
-            <Task1 />
-            {/* <Experiment /> */}
+        <div style={{ height: 200 }}>
+            <FixedView>
+                <TaskComponent />
+            </FixedView>
         </div>
     );
 }
-
 export default App;
