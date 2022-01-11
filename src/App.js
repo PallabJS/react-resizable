@@ -1,12 +1,11 @@
 import FixedView from "./components/FixedView/FixedView";
 import TaskComponent from "./components/demo/Task1";
+import Experiment from "./components/Experiment";
 
 function App() {
     return (
-        <div style={{ height: 200 }}>
-            <FixedView>
-                <TaskComponent />
-            </FixedView>
+        <div style={{ position: "relative", width: "100vw" }}>
+            <TaskComponent />
         </div>
     );
 }

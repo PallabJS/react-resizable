@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ResizableContainer from "../ResizableContainer/ResizableContainer";
-import Resizable from "../ResizableContainer/Resizable";
+import ResizableContainer, { Resizable } from "../../core";
 import FixedView from "../FixedView/FixedView";
 import DataViewer from "../DataViewer";
 
@@ -39,6 +38,10 @@ const Task1 = () => {
                     <Resizable row={0}>
                         <DataViewer data={data[1]} updateData={updateData} />
                     </Resizable>
+                    <Resizable row={1}>
+                        <DataViewer data={data[2]} updateData={updateData} />
+                    </Resizable>
+
                     <Resizable row={1}>
                         <DataViewer data={data[2]} updateData={updateData} />
                     </Resizable>

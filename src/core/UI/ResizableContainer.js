@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: "column",
         justifyContent: "center",
         width: "100%",
-        height: `calc(100% - 4px)`,
+        height: `calc(100% - 0px)`,
         overflow: "hidden",
     },
     flexRow: {

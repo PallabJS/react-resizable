@@ -11,6 +11,7 @@ const useStyles = createUseStyles((theme) => ({
         padding: 10,
         overflowX: "hidden",
         overflow: "scroll",
+        // border: "1px solid red",
         "&::-webkit-scrollbar": {},
     },
 }));
